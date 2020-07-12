@@ -1,0 +1,54 @@
+@import './normalize.css';
+
+/* 定义变量 使css能直接调用变量*/
+:root{
+  --color-text: #666;
+  --color-hight-text: #ff5777;
+  /* tint 整体背景颜色 */
+  --color-tint: #ff8198;
+  --color-backgroud: #fff;
+  --font-siz: 14px;
+  --line-height: 1.5;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB" , "Microsoft YaHei", "微软雅黑" ,Arial,sans-serif;
+  user-select: none; /*紧张用户鼠标再页面上选中文字/图片等*/
+  -webkit-tap-highlight-color: transparent; 
+
+  background-color: var(--color-backgroud);
+  color: var(--color-text);
+  width: 100vw;  /*让body的宽度为屏幕的百分之百*/
+}
+
+a{
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clear-fix::after{
+  clear: both;
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden; /*让clear-fix不可见 但是空间上存在*/
+}
+
+.clear-fix{
+  zoom: 1;
+}
+
+.left{
+  float: left;
+}
+
+.right{
+  float: right;
+}
