@@ -17,6 +17,7 @@ export function request(config){
     instance.interceptors.response.use(res => {
       console.log("收到响应")
       return res.data
+
     },err => {
       console.log(err)
     })

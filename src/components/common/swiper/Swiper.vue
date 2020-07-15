@@ -55,7 +55,7 @@ export default {
     // Slide
   },
   mounted() {
-    //计时器记得开启 保证dom先建立起来 js再运行 不然小点出不来
+    //计时器记得开启  要先保证dom先建立起来 js再运行 不然小点出不来
     setTimeout(() => {
       /**
        * 创建轮播图 1.要先设置dom结构
@@ -70,7 +70,7 @@ export default {
 
       //2.开启定时器
       this.startTimer();
-    }, 1000);
+    }, 300);
   },
   methods: {
     /**

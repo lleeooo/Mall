@@ -4,18 +4,37 @@
       <div slot="center">购物</div>
     </nav-bar>
 
-    <home-swiper :banners="banners"/>
-    <recommend-view :recommends = "recommends"></recommend-view>
+    <b-scroll
+      class="content"
+      ref="scroll"
+      :probeType="3"
+      @scroll="contentPosition"
+      :pullUpLoad="true"
+      @loadMore="imgItemLoad">
+      <home-swiper :banners="banners" />
+      <recommend-view :recommends="recommends" />
+      <feature-view />
+      <tab-control :titles="['流行' , '新款', '精选']" class="tab-control" @tabClick="tabClick" />
+      <goods-list :goods="showGoods" />
+    </b-scroll>
 
+    <back-totop @click.native="backClick" v-show="isShow" />
   </div>
 </template>
 
 <script>
+import BScroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/Navbar";
-import HomeSwiper from "./childCompos/HomeSwiper";
-import RecommendView from './childCompos/RecommendView'
 
-import { getHomeMultidata } from "network/home";
+import HomeSwiper from "./childCompos/HomeSwiper";
+import RecommendView from "./childCompos/RecommendView";
+import FeatureView from "./childCompos/FeatureView";
+
+import TabControl from "components/content/TabControl";
+import GoodsList from "components/content/goods/GoodsList";
+import BackTotop from "components/content/backTotop/BackTotop";
+
+import { getHomeMultidata, getHomeGoods } from "network/home";
 
 export default {
   name: "Home",
@@ -23,30 +42,125 @@ export default {
     return {
       banners: [],
       recommends: [],
-      dKeyword: [],
-      keywords: []
+      goods: {
+        pop: { page: 0, list: [] },
+        new: { page: 0, list: [] },
+        sell: { page: 0, list: [] }
+      },
+      curType: "pop",
+      isShow: false
     };
   },
+  computed: {
+    showGoods() {
+      return this.goods[this.curType].list;
+    }
+  },
   components: {
+    BScroll,
     NavBar,
+
     HomeSwiper,
-    RecommendView
+    RecommendView,
+    FeatureView,
+
+    TabControl,
+    GoodsList,
+    BackTotop
   },
   created() {
-    // 1.请求多个数据
-    getHomeMultidata().then(res => {
-      this.banners = res.data.banner.list;
-      this.recommends = res.data.recommend.list;
-      this.dKeyword = res.data.dKeyword;
-      this.keywords = res.data.keywords;
+    // 1.请求banner recommend数据
+    this.getHomeMultidata(),
+      //2.请求商品数据
+      this.getHomeGoods("pop");
+    this.getHomeGoods("new");
+    this.getHomeGoods("sell");
+  },
+
+  mounted() {
+    const refresh = this.debounce(this.$refs.scroll.refresh , 300)
+    //图片加载时 利用总线进行监听图片加载 并且进行better-scroll的高度刷新
+    this.$bus.$on("imgItemLoad", () => {
+      refresh()
     });
+  },
+  methods: {
+    /**
+     * 关于数据请求的方法
+     */
+    debounce(func , delay){
+      let timer = null 
+      return function() {
+        if(timer) clearTimeout(timer)
+        timer = setTimeout(() => {
+          func()
+        }, delay);
+      }
+    }
+
+    ,
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.curType = "pop";
+          break;
+        case 1:
+          this.curType = "new";
+          break;
+        case 2:
+          this.curType = "sell";
+      }
+    },
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    contentPosition(position) {
+      this.isShow = -position.y > 1000;
+    },
+    imgItemLoad(){
+      this.getHomeGoods(this.curType)
+    },
+
+    /**
+     * 关于网络请求的方法
+     */
+    getHomeMultidata() {
+      getHomeMultidata().then(res => {
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
+    },
+    getHomeGoods(type) {
+      const page = this.goods[type].page + 1;
+      getHomeGoods(type, page).then(res => {
+        this.goods[type].list.push(...res.data.list);
+        this.goods[type].page += 1;
+        
+        //标识一次上拉加载动作结束
+        this.$refs.scroll.finishPullUp()
+      });
+    }
   }
 };
 </script>
 
 <style  scoped>
+#home {
+  position: relative;
+  padding-top: 44px;
+  height: 100vh;
+}
 .navbar {
   background: lightcoral;
   color: #fff;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 9;
+}
+.content {
+  height: calc(100% - 49px);
+  overflow: hidden;
 }
 </style>
