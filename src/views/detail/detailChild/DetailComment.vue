@@ -1,5 +1,5 @@
 <template>
-  <div class="commonent">
+  <div class="commonent" v-if="Object.keys(commentInfo).length !== 0">
     <div class="common-top">
       <span class="common-top-title">用户评价</span>
       <span class="more">更多

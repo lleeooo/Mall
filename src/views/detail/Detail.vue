@@ -2,14 +2,14 @@
   <div id="Detail">
     <detail-navBar class="detail-nav"></detail-navBar>
 
-    <Scroll class="contont" ref="scroll">
+    <Scroll class="contont" ref="scroll" >
       <detail-swiper :topImages="topImages"></detail-swiper>
       <detail-baseinfo :goods="goods"></detail-baseinfo>
       <detail-shop :shop="shop" />
-      <detail-comment :commentInfo="commentInfo"/>
-      <detail-goodsInfo :detailInfo="detailInfo" @goodsImagesLoad="goodsImagesLoad"/>
-      <detail-goodsparams :goodsParams="goodsParams"/>
-
+      <detail-comment :commentInfo="commentInfo" />
+      <detail-goodsInfo :detailInfo="detailInfo" @goodsImagesLoad="goodsImagesLoad" />
+      <detail-goodsparams :goodsParams="goodsParams" />
+      <goods-list :goods="recommends" />
     </Scroll>
   </div>
 </template> 
@@ -21,13 +21,20 @@ import DetailNavBar from "./detailChild/DetailNavBar";
 import DetailSwiper from "./detailChild/DetailSwiper";
 import DetailBaseinfo from "./detailChild/DetailBaseInfo";
 import DetailShop from "./detailChild/DetailShop";
-import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
-import DetailGoodsparams from './detailChild/DetailGoodsParams'
-import DetailComment from './detailChild/DetailComment'
+import DetailGoodsInfo from "./detailChild/DetailGoodsInfo";
+import DetailGoodsparams from "./detailChild/DetailGoodsParams";
+import DetailComment from "./detailChild/DetailComment";
+import GoodsList from "components/content/goods/GoodsList";
+import {debounce} from "@/common/utils.js"
 
-import { getDetail, Goods, Shop , GoodsParams} from "network/detail";
 
-
+import {
+  getDetail,
+  Goods,
+  Shop,
+  GoodsParams,
+  getRecommends
+} from "network/detail";
 
 export default {
   name: "Detail",
@@ -38,8 +45,9 @@ export default {
       goods: {},
       shop: {},
       detailInfo: {},
-      goodsParams:{},
-      commentInfo:{}
+      goodsParams: {},
+      commentInfo: {},
+      recommends: []
     };
   },
   components: {
@@ -51,13 +59,14 @@ export default {
     DetailShop,
     DetailGoodsInfo,
     DetailGoodsparams,
-    DetailComment
+    DetailComment,
+    GoodsList
   },
   methods: {
-    goodsImagesLoad(){
-      this.$refs.scroll.refresh()
+    goodsImagesLoad() {
+      this.$refs.scroll.refresh();
     }
-
+  
   },
   created() {
     //获取点击图片的iid
@@ -81,17 +90,27 @@ export default {
       this.shop = new Shop(data.shopInfo);
 
       //4.获取商品展示信息
-      this.detailInfo = data.detailInfo
+      this.detailInfo = data.detailInfo;
 
       //5.商品尺寸信息的获取
-      this.goodsParams = new GoodsParams(data.itemParams.info , data.itemParams.rule)
-
+      this.goodsParams = new GoodsParams(
+        data.itemParams.info,
+        data.itemParams.rule
+      );
 
       //6.获取评论信息
-      this.commentInfo = data.rate.list[0]
+      this.commentInfo = data.rate.list[0];
+    });
 
-
-
+    //获取热门推荐信息
+    getRecommends().then(res => {
+      this.recommends = res.data.list;
+    });
+  },
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 500);
+    this.$bus.$on("detailimgItemLoad", () => {
+      refresh();
     });
   }
 };
@@ -107,7 +126,8 @@ export default {
 
 .contont {
   height: calc(100% - 44px);
-  background: #fff;
+  background-color: #fff;
+  z-index: 9;
 }
 
 .detail-nav {

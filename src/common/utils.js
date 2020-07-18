@@ -8,3 +8,13 @@ export function fromatDate(data){
   let s = (date.getSeconds() < 10 ? ('0' + date.getSeconds()) : (date.getSeconds()))
   return Y + M + D + h + m + s
 }
+
+export  function  debounce(func, delay) {
+  let timer = null;
+  return function() {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      func();
+    }, delay);
+  };
+}

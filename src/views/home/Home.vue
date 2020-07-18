@@ -36,6 +36,7 @@ import FeatureView from "./childCompos/FeatureView";
 import TabControl from "components/content/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import BackTotop from "components/content/backTotop/BackTotop";
+import {debounce} from "@/common/utils.js"
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -85,11 +86,12 @@ export default {
   },
 
   mounted() {
-    const refresh = this.debounce(this.$refs.scroll.refresh, 500);
+    const refresh = debounce(this.$refs.scroll.refresh, 500);
     //图片加载时 利用总线进行监听图片加载 并且进行better-scroll的高度刷新
-    this.$bus.$on("imgItemLoad", () => {
+    this.$bus.$on("homeimgItemLoad", () => {
       refresh();
     });
+
   },
 
   activated(){
@@ -106,15 +108,15 @@ export default {
      * 关于数据请求的方法
      */
     //防抖函数
-    debounce(func, delay) {
-      let timer = null;
-      return function() {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          func();
-        }, delay);
-      };
-    },
+    // debounce(func, delay) {
+    //   let timer = null;
+    //   return function() {
+    //     if (timer) clearTimeout(timer);
+    //     timer = setTimeout(() => {
+    //       func();
+    //     }, delay);
+    //   };
+    // },
 
     tabClick(index) {
       switch (index) {

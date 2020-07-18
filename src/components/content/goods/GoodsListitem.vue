@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsitem.show.img" @load="imgload"/>
+    <img :src="getImage" @load="imgload" />
     <div class="goods-info">
       <p>{{goodsitem.title}}</p>
       <span class="price">{{goodsitem.price}}</span>
@@ -20,12 +20,21 @@ export default {
       }
     }
   },
-  methods:{
-    imgload(){
-      this.$bus.$emit('imgItemLoad')
+  methods: {
+    imgload() {
+      if(this.$route.path.indexOf('/home') !== -1){
+        this.$bus.$emit("homeimgItemLoad");
+      }else if(this.$route.path.indexOf('/detail') !== -1){
+        this.$bus.$emit("detailimgItemLoad")
+      }
     },
-    itemClick(){
-      this.$router.push('/detail/' + this.goodsitem.iid)
+    itemClick() {
+      this.$router.push("/detail/" + this.goodsitem.iid);
+    }
+  },
+  computed: {
+    getImage() {
+      return this.goodsitem.image || this.goodsitem.show.img;
     }
   }
 };
@@ -33,13 +42,12 @@ export default {
 
 <style scoped>
 .goods-item {
-  margin-bottom: 30px ;
+  margin-bottom: 30px;
 
   width: 48%;
   position: relative;
   padding: 0 2px;
-  padding-bottom: 50px ;
-
+  padding-bottom: 50px;
 }
 .goods-item img {
   width: 100%;
@@ -54,7 +62,6 @@ export default {
   right: 0;
   bottom: 5px;
   text-align: center;
-
 }
 
 .goods-info p {
@@ -68,11 +75,10 @@ export default {
   margin-right: 30px;
 }
 
-.goods-info .cfav{
+.goods-info .cfav {
   position: relative;
 }
 .goods-info .cfav::before {
-  
   background: url("~assets/img/goodsCollect/collect.svg") 0 0/12px 12px;
   content: "";
   position: absolute;
