@@ -6,6 +6,7 @@
       <detail-swiper :topImages="topImages"></detail-swiper>
       <detail-baseinfo :goods="goods"></detail-baseinfo>
       <detail-shop :shop="shop" />
+      <detail-comment :commentInfo="commentInfo"/>
       <detail-goodsInfo :detailInfo="detailInfo" @goodsImagesLoad="goodsImagesLoad"/>
       <detail-goodsparams :goodsParams="goodsParams"/>
 
@@ -22,8 +23,11 @@ import DetailBaseinfo from "./detailChild/DetailBaseInfo";
 import DetailShop from "./detailChild/DetailShop";
 import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
 import DetailGoodsparams from './detailChild/DetailGoodsParams'
+import DetailComment from './detailChild/DetailComment'
 
 import { getDetail, Goods, Shop , GoodsParams} from "network/detail";
+
+
 
 export default {
   name: "Detail",
@@ -34,8 +38,8 @@ export default {
       goods: {},
       shop: {},
       detailInfo: {},
-      goodsParams:{}
-
+      goodsParams:{},
+      commentInfo:{}
     };
   },
   components: {
@@ -46,12 +50,14 @@ export default {
     DetailBaseinfo,
     DetailShop,
     DetailGoodsInfo,
-    DetailGoodsparams
+    DetailGoodsparams,
+    DetailComment
   },
   methods: {
     goodsImagesLoad(){
       this.$refs.scroll.refresh()
     }
+
   },
   created() {
     //获取点击图片的iid
@@ -80,6 +86,12 @@ export default {
       //5.商品尺寸信息的获取
       this.goodsParams = new GoodsParams(data.itemParams.info , data.itemParams.rule)
 
+
+      //6.获取评论信息
+      this.commentInfo = data.rate.list[0]
+
+
+
     });
   }
 };
@@ -95,6 +107,7 @@ export default {
 
 .contont {
   height: calc(100% - 44px);
+  background: #fff;
 }
 
 .detail-nav {
