@@ -1,6 +1,6 @@
 <template>
   <div class="backTotop">
-    <img src="~assets/img/home/backTotop1.png" />
+    <img src="~assets/img/home/top.png" />
   </div>
 </template>
 
@@ -13,14 +13,12 @@ export default {
 <style scoped>
 .backTotop{
   position: fixed;
-  right: -110px;
+  right: -30px;
   bottom: 70px;
 }
 .backTotop img{
-  width: 20%;
-  height: 20%;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
+  width: 50%;
+  height: 50%;
 }
 
 </style>

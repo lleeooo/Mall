@@ -4,17 +4,20 @@
       <div slot="center">购物</div>
     </nav-bar>
 
+    <tab-control :titles="['流行' , '新款', '精选']" @tabClick="tabClick" ref="tabControl1"  class="tab-control" v-show="this.isTabFixed"/>
+
     <b-scroll
       class="content"
       ref="scroll"
       :probeType="3"
       @scroll="contentPosition"
       :pullUpLoad="true"
-      @loadMore="imgItemLoad">
-      <home-swiper :banners="banners" />
+      @loadMore="imgItemLoad"
+    >
+      <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad" />
       <recommend-view :recommends="recommends" />
       <feature-view />
-      <tab-control :titles="['流行' , '新款', '精选']" class="tab-control" @tabClick="tabClick" />
+      <tab-control :titles="['流行' , '新款', '精选']" @tabClick="tabClick" ref="tabControl2" />
       <goods-list :goods="showGoods" />
     </b-scroll>
 
@@ -48,7 +51,11 @@ export default {
         sell: { page: 0, list: [] }
       },
       curType: "pop",
-      isShow: false
+      isShow: false,
+      tabDistance: 0,
+      isTabFixed: null,
+      saveY:0
+
     };
   },
   computed: {
@@ -72,33 +79,43 @@ export default {
     // 1.请求banner recommend数据
     this.getHomeMultidata(),
       //2.请求商品数据
-      this.getHomeGoods("pop");
+    this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
 
   mounted() {
-    const refresh = this.debounce(this.$refs.scroll.refresh , 300)
+    const refresh = this.debounce(this.$refs.scroll.refresh, 500);
     //图片加载时 利用总线进行监听图片加载 并且进行better-scroll的高度刷新
     this.$bus.$on("imgItemLoad", () => {
-      refresh()
+      refresh();
     });
   },
+
+  activated(){
+    this.$refs.scroll.scrollTo(0 , this.saveY , 100)
+    this.$refs.scroll.refresh()
+  },
+  deactivated(){
+    this.saveY = this.$refs.scroll.scroll.y
+  },
+
+
   methods: {
     /**
      * 关于数据请求的方法
      */
-    debounce(func , delay){
-      let timer = null 
+    //防抖函数
+    debounce(func, delay) {
+      let timer = null;
       return function() {
-        if(timer) clearTimeout(timer)
+        if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
-          func()
+          func();
         }, delay);
-      }
-    }
+      };
+    },
 
-    ,
     tabClick(index) {
       switch (index) {
         case 0:
@@ -110,15 +127,25 @@ export default {
         case 2:
           this.curType = "sell";
       }
+      this.$refs.tabControl1.curIndex = index
+      this.$refs.tabControl2.curIndex = index
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
     },
     contentPosition(position) {
+      //返回顶部
       this.isShow = -position.y > 1000;
+
+      //固定tabControl
+      this.isTabFixed = -position.y > this.tabDistance;
     },
-    imgItemLoad(){
-      this.getHomeGoods(this.curType)
+    imgItemLoad() {
+      this.getHomeGoods(this.curType);
+    },
+    swiperImgLoad() {
+      this.tabDistance = this.$refs.tabControl2.$el.offsetTop ;
+      
     },
 
     /**
@@ -135,9 +162,9 @@ export default {
       getHomeGoods(type, page).then(res => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
-        
+
         //标识一次上拉加载动作结束
-        this.$refs.scroll.finishPullUp()
+        this.$refs.scroll.finishPullUp();
       });
     }
   }
@@ -147,20 +174,33 @@ export default {
 <style  scoped>
 #home {
   position: relative;
-  padding-top: 44px;
+  /* padding-top: 44px; */
   height: 100vh;
 }
 .navbar {
   background: lightcoral;
   color: #fff;
-  position: fixed;
-  left: 0;
+  /* position: fixed; */
+   /*left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 }
 .content {
+  /* position: absolute;
   height: calc(100% - 49px);
-  overflow: hidden;
+  overflow: hidden; */
+
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+    overflow: hidden
+}
+
+.tab-control{
+  position: relative;
+  margin-top: -1px;
 }
 </style>
