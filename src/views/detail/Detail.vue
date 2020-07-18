@@ -7,6 +7,8 @@
       <detail-baseinfo :goods="goods"></detail-baseinfo>
       <detail-shop :shop="shop" />
       <detail-goodsInfo :detailInfo="detailInfo" @goodsImagesLoad="goodsImagesLoad"/>
+      <detail-goodsparams :goodsParams="goodsParams"/>
+
     </Scroll>
   </div>
 </template> 
@@ -19,8 +21,9 @@ import DetailSwiper from "./detailChild/DetailSwiper";
 import DetailBaseinfo from "./detailChild/DetailBaseInfo";
 import DetailShop from "./detailChild/DetailShop";
 import DetailGoodsInfo from './detailChild/DetailGoodsInfo'
+import DetailGoodsparams from './detailChild/DetailGoodsParams'
 
-import { getDetail, Goods, Shop } from "network/detail";
+import { getDetail, Goods, Shop , GoodsParams} from "network/detail";
 
 export default {
   name: "Detail",
@@ -30,7 +33,8 @@ export default {
       topImages: [],
       goods: {},
       shop: {},
-      detailInfo: {}
+      detailInfo: {},
+      goodsParams:{}
 
     };
   },
@@ -41,7 +45,8 @@ export default {
     DetailSwiper,
     DetailBaseinfo,
     DetailShop,
-    DetailGoodsInfo
+    DetailGoodsInfo,
+    DetailGoodsparams
   },
   methods: {
     goodsImagesLoad(){
@@ -71,6 +76,10 @@ export default {
 
       //4.获取商品展示信息
       this.detailInfo = data.detailInfo
+
+      //5.商品尺寸信息的获取
+      this.goodsParams = new GoodsParams(data.itemParams.info , data.itemParams.rule)
+
     });
   }
 };
