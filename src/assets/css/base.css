@@ -25,6 +25,10 @@ body{
   background-color: var(--color-backgroud);
   color: var(--color-text);
   width: 100vw;  /*让body的宽度为屏幕的百分之百*/
+  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
+  overflow: scroll;
+  -webkit-transform: translateZ(0px)
 }
 
 a{

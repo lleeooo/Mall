@@ -30,7 +30,8 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       probeType: this.probeType,
       click: true,
-      pullUpLoad: this.pullUpLoad
+      pullUpLoad: this.pullUpLoad,
+      useTransition:false 
     })
 
     //把滚动条位置传出去

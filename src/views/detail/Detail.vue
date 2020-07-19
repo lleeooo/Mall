@@ -1,16 +1,17 @@
 <template>
   <div id="Detail">
-    <detail-navBar class="detail-nav"></detail-navBar>
+    <detail-navBar class="detail-nav" @navItemClick="navItemClick" ref="detailNav" />
 
-    <Scroll class="contont" ref="scroll" >
-      <detail-swiper :topImages="topImages"></detail-swiper>
-      <detail-baseinfo :goods="goods"></detail-baseinfo>
+    <Scroll class="contont" ref="scroll" :probeType="3" @scroll="contentScroll">
+      <detail-swiper :topImages="topImages"/>
+      <detail-baseinfo :goods="goods"/>
       <detail-shop :shop="shop" />
-      <detail-comment :commentInfo="commentInfo" />
+      <detail-comment ref="comment" :commentInfo="commentInfo" />
       <detail-goodsInfo :detailInfo="detailInfo" @goodsImagesLoad="goodsImagesLoad" />
-      <detail-goodsparams :goodsParams="goodsParams" />
-      <goods-list :goods="recommends" />
+      <detail-goodsparams ref="params" :goodsParams="goodsParams" />
+      <goods-list :goods="recommends" ref="recommends" />
     </Scroll>
+    <DetailBottomBar/>
   </div>
 </template> 
 
@@ -25,8 +26,8 @@ import DetailGoodsInfo from "./detailChild/DetailGoodsInfo";
 import DetailGoodsparams from "./detailChild/DetailGoodsParams";
 import DetailComment from "./detailChild/DetailComment";
 import GoodsList from "components/content/goods/GoodsList";
-import {debounce} from "@/common/utils.js"
-
+import DetailBottomBar from "./detailChild/DetailBottomBar"
+import { debounce } from "@/common/utils.js";
 
 import {
   getDetail,
@@ -47,7 +48,10 @@ export default {
       detailInfo: {},
       goodsParams: {},
       commentInfo: {},
-      recommends: []
+      recommends: [],
+      themeTopy: [],
+      getThemeTopy: null,
+      curIndex: 0
     };
   },
   components: {
@@ -60,13 +64,38 @@ export default {
     DetailGoodsInfo,
     DetailGoodsparams,
     DetailComment,
-    GoodsList
+    GoodsList,
+    DetailBottomBar
   },
   methods: {
     goodsImagesLoad() {
       this.$refs.scroll.refresh();
+      this.getThemeTopy();
+    },
+    //点击navbar 跳转到对应位置 要加上导航栏的高度
+    navItemClick(index) {
+      this.$refs.scroll.scrollTo(0, -this.themeTopy[index] + 44, 100);
+    },
+    contentScroll(position) {
+      //当在评论区域取1 参数取2 推荐取3
+      let length = this.themeTopy.length;
+      for (let index = 0; index < length; index++) {
+        //为了不多次调用 先进行判断
+        if (this.curIndex !== index) {
+          if (
+            (index < length - 1 && //商品、评论、参数的取角标：当index在0-2之间时 并且 区域是在评论 参数 他们的区域间时，把对应的index保存下来
+              -position.y + 44 >= this.themeTopy[index] &&
+              -position.y + 44 < this.themeTopy[index + 1]) ||
+            //推荐的取角标： 当index是3时 并且 区域是在超过了参数的区域的时候 把角标保存下来
+            (index === length - 1 && -position.y + 44 >= this.themeTopy[index])
+          ) {
+            this.curIndex = index;
+            //把保存的角标传到navbar里进行对应的改变
+            this.$refs.detailNav.curIndex = this.curIndex
+          }
+        }
+      }
     }
-  
   },
   created() {
     //获取点击图片的iid
@@ -106,6 +135,15 @@ export default {
     getRecommends().then(res => {
       this.recommends = res.data.list;
     });
+
+    this.getThemeTopy = debounce(() => {
+      this.themeTopy = [];
+      this.themeTopy.push(0);
+      this.themeTopy[1] = this.$refs.comment.$el.offsetTop;
+      this.themeTopy[2] = this.$refs.params.$el.offsetTop;
+      this.themeTopy[3] = this.$refs.recommends.$el.offsetTop;
+      console.log(this.themeTopy);
+    }, 300);
   },
   mounted() {
     const refresh = debounce(this.$refs.scroll.refresh, 500);
