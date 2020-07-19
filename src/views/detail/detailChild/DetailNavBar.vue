@@ -35,6 +35,7 @@ export default {
     titleClick(index) {
       this.curIndex = index;
       this.$emit('navItemClick' , index)
+      
     },
     backClick(){
       this.$router.back()
