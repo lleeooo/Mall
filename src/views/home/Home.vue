@@ -4,7 +4,13 @@
       <div slot="center">购物</div>
     </nav-bar>
 
-    <tab-control :titles="['流行' , '新款', '精选']" @tabClick="tabClick" ref="tabControl1"  class="tab-control" v-show="this.isTabFixed"/>
+    <tab-control
+      :titles="['流行' , '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      class="tab-control"
+      v-show="this.isTabFixed"
+    />
 
     <b-scroll
       class="content"
@@ -36,7 +42,7 @@ import FeatureView from "./childCompos/FeatureView";
 import TabControl from "components/content/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import BackTotop from "components/content/backTotop/BackTotop";
-import {debounce} from "@/common/utils.js"
+import { debounce } from "@/common/utils.js";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -55,8 +61,7 @@ export default {
       isShow: false,
       tabDistance: 0,
       isTabFixed: null,
-      saveY:0
-
+      saveY: 0
     };
   },
   computed: {
@@ -80,7 +85,7 @@ export default {
     // 1.请求banner recommend数据
     this.getHomeMultidata(),
       //2.请求商品数据
-    this.getHomeGoods("pop");
+      this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
@@ -91,17 +96,15 @@ export default {
     this.$bus.$on("homeimgItemLoad", () => {
       refresh();
     });
-
   },
 
-  activated(){
-    this.$refs.scroll.scrollTo(0 , this.saveY , 100)
-    this.$refs.scroll.refresh()
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 100);
+    this.$refs.scroll.refresh();
   },
-  deactivated(){
-    this.saveY = this.$refs.scroll.scroll.y
+  deactivated() {
+    this.saveY = this.$refs.scroll.scroll.y;
   },
-
 
   methods: {
     /**
@@ -129,8 +132,8 @@ export default {
         case 2:
           this.curType = "sell";
       }
-      this.$refs.tabControl1.curIndex = index
-      this.$refs.tabControl2.curIndex = index
+      this.$refs.tabControl1.curIndex = index;
+      this.$refs.tabControl2.curIndex = index;
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
@@ -146,8 +149,7 @@ export default {
       this.getHomeGoods(this.curType);
     },
     swiperImgLoad() {
-      this.tabDistance = this.$refs.tabControl2.$el.offsetTop ;
-      
+      this.tabDistance = this.$refs.tabControl2.$el.offsetTop;
     },
 
     /**
@@ -183,7 +185,7 @@ export default {
   background: lightcoral;
   color: #fff;
   /* position: fixed; */
-   /*left: 0;
+  /*left: 0;
   right: 0;
   top: 0;
   z-index: 9; */
@@ -193,15 +195,15 @@ export default {
   height: calc(100% - 49px);
   overflow: hidden; */
 
-    position: absolute;
-    top: 44px;
-    bottom: 49px;
-    left: 0;
-    right: 0;
-    overflow: hidden
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
 }
 
-.tab-control{
+.tab-control {
   position: relative;
   margin-top: -1px;
 }

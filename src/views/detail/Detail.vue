@@ -12,6 +12,7 @@
       <goods-list :goods="recommends" ref="recommends" />
     </Scroll>
     <DetailBottomBar/>
+    <BackTotop @click.native="backClick" v-show="isShow"/>
   </div>
 </template> 
 
@@ -28,6 +29,7 @@ import DetailComment from "./detailChild/DetailComment";
 import GoodsList from "components/content/goods/GoodsList";
 import DetailBottomBar from "./detailChild/DetailBottomBar"
 import { debounce } from "@/common/utils.js";
+import {backTopMinxin} from "@/common/mixin.js"
 
 import {
   getDetail,
@@ -54,6 +56,7 @@ export default {
       curIndex: 0
     };
   },
+  mixins:[backTopMinxin],
   components: {
     Scroll,
 
@@ -95,6 +98,7 @@ export default {
           }
         }
       }
+      this.isShow = -position.y > 1000;
     }
   },
   created() {
