@@ -1,8 +1,8 @@
 <template>
-  <div id="Detail">
+  <div id="Detail" >
     <detail-navBar class="detail-nav" @navItemClick="navItemClick" ref="detailNav" />
-
     <Scroll class="contont" ref="scroll" :probeType="3" @scroll="contentScroll">
+
       <detail-swiper :topImages="topImages"/>
       <detail-baseinfo :goods="goods"/>
       <detail-shop :shop="shop" />
@@ -11,7 +11,9 @@
       <detail-goodsparams ref="params" :goodsParams="goodsParams" />
       <goods-list :goods="recommends" ref="recommends" />
     </Scroll>
-    <DetailBottomBar/>
+
+
+    <DetailBottomBar @joinShopcart="joinShopcart"/>
     <BackTotop @click.native="backClick" v-show="isShow"/>
   </div>
 </template> 
@@ -75,10 +77,12 @@ export default {
       this.$refs.scroll.refresh();
       this.getThemeTopy();
     },
+
     //点击navbar 跳转到对应位置 要加上导航栏的高度
     navItemClick(index) {
       this.$refs.scroll.scrollTo(0, -this.themeTopy[index] + 44, 100);
     },
+
     contentScroll(position) {
       //当在评论区域取1 参数取2 推荐取3
       let length = this.themeTopy.length;
@@ -99,6 +103,24 @@ export default {
         }
       }
       this.isShow = -position.y > 1000;
+    },
+
+
+    //将商品添加进购物车
+    joinShopcart(){
+      //1.获取信息
+      const product = {}
+      product.img = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.realPrice =this.goods.realPrice
+      product.iid = this.iid
+      product.count = 0
+      console.log(product)
+
+      //2.将商品添加到购物车中
+      this.$store.dispatch('addCart' , product)
+
     }
   },
   created() {
@@ -109,7 +131,6 @@ export default {
     getDetail(this.iid).then(res => {
       //1.拿出轮播图的图片
       this.topImages = res.result.itemInfo.topImages;
-      console.log(res);
       const data = res.result;
 
       //2.获取商品的数据
@@ -143,12 +164,12 @@ export default {
     this.getThemeTopy = debounce(() => {
       this.themeTopy = [];
       this.themeTopy.push(0);
-      this.themeTopy[1] = this.$refs.comment.$el.offsetTop;
-      this.themeTopy[2] = this.$refs.params.$el.offsetTop;
-      this.themeTopy[3] = this.$refs.recommends.$el.offsetTop;
-      console.log(this.themeTopy);
+      this.themeTopy.push( this.$refs.comment.$el.offsetTop);
+      this.themeTopy.push(this.$refs.params.$el.offsetTop);
+      this.themeTopy.push(this.$refs.recommends.$el.offsetTop);
     }, 300);
   },
+
   mounted() {
     const refresh = debounce(this.$refs.scroll.refresh, 500);
     this.$bus.$on("detailimgItemLoad", () => {
