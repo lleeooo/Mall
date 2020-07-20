@@ -3,9 +3,12 @@
     <nav-bar class="navbar">
       <div slot="center">购物车({{cartLength}})</div>
     </nav-bar>
+
     <scroll class="content" ref="scroll">
       <cart-list></cart-list>
     </scroll>
+
+    <cart-bottom-bar class="bottom-bar"></cart-bottom-bar>
   </div>
 </template>
 
@@ -14,6 +17,7 @@ import NavBar from "components/common/navbar/Navbar";
 import scroll from "components/common/scroll/Scroll";
 
 import CartList from "./cartChild/CartList";
+import CartBottomBar from './cartChild/CartBottomBar'
 
 import { mapGetters } from "vuex";
 
@@ -22,7 +26,8 @@ export default {
   components: {
     NavBar,
     scroll,
-    CartList
+    CartList,
+    CartBottomBar
   },
   computed: {
     //将路由中的getters方法 拿过来当computed方式使用
@@ -52,15 +57,21 @@ export default {
   background-color: var(--color-tint);
   color: #fff;
   z-index: 9;
+  
 }
 
 .content {
   position: absolute;
   top: 44px;
-  bottom: 49px;
+  bottom: 90px;
   left: 0;
   right: 0;
-  height: calc(100%-49px);
+  height: calc(100%-90px);
   overflow: hidden;
+}
+.bottom-bar{
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
 }
 </style>

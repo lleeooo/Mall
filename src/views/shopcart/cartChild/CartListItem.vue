@@ -1,7 +1,7 @@
 <template>
   <div class="cartlist-item">
     <div class="check">
-      <check-button></check-button>
+      <check-button :isCheck="product.checked" @click.native="checked"/>
     </div>
     <div class="item-img">
       <img :src="product.img" alt />
@@ -17,6 +17,7 @@
   </div>
 </template>
 
+
 <script>
 import CheckButton from "components/content/checkButton/CheckButton"
 export default {
@@ -31,6 +32,12 @@ export default {
   },
   components: {
     CheckButton
+  },
+  methods: {
+    //监听货物的选择
+    checked(){
+      this.product.checked = !this.product.checked
+    }
   }
 };
 </script>

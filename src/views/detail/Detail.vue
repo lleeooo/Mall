@@ -118,8 +118,9 @@ export default {
       product.count = 0
       console.log(product)
 
+
       //2.将商品添加到购物车中
-      this.$store.dispatch('addCart' , product)
+      this.$store.dispatch('addCart' , product).then(res => {console.log(res)})
 
     }
   },
