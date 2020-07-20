@@ -15,7 +15,7 @@ export default {
   props: {
     goods: {
       type: Array,
-      define() {
+      default() {
         return [];
       }
     }

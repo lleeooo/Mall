@@ -178,23 +178,14 @@ export default {
 <style  scoped>
 #home {
   position: relative;
-  /* padding-top: 44px; */
   height: 100vh;
 }
 .navbar {
   background: lightcoral;
   color: #fff;
-  /* position: fixed; */
-  /*left: 0;
-  right: 0;
-  top: 0;
-  z-index: 9; */
+
 }
 .content {
-  /* position: absolute;
-  height: calc(100% - 49px);
-  overflow: hidden; */
-
   position: absolute;
   top: 44px;
   bottom: 49px;

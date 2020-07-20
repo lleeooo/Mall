@@ -23,7 +23,7 @@ export default {
   props: {
     goodsParams: {
       type: Object,
-      define() {
+      default() {
         return {};
       }
     }

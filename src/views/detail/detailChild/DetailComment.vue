@@ -36,7 +36,7 @@ export default {
   props: {
     commentInfo: {
       type: Object,
-      define() {
+      default() {
         return {};
       }
     }

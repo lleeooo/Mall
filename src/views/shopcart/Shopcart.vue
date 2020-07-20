@@ -1,37 +1,66 @@
 <template>
-    <div class="shopcart">
-      <nav-bar class="navbar">
-        <div  slot="center">购物车({{cartLength}})</div>
-      </nav-bar>
-    </div>
+  <div id="shopcart">
+    <nav-bar class="navbar">
+      <div slot="center">购物车({{cartLength}})</div>
+    </nav-bar>
+    <scroll class="content" ref="scroll">
+      <cart-list></cart-list>
+    </scroll>
+  </div>
 </template>
 
 <script>
-import NavBar from "components/common/navbar/Navbar"
+import NavBar from "components/common/navbar/Navbar";
+import scroll from "components/common/scroll/Scroll";
 
-import {mapGetters} from 'vuex'
+import CartList from "./cartChild/CartList";
+
+import { mapGetters } from "vuex";
 
 export default {
   name: "Shopcart",
   components: {
-    NavBar
+    NavBar,
+    scroll,
+    CartList
   },
-  computed:{
+  computed: {
     //将路由中的getters方法 拿过来当computed方式使用
     //第一种写法  不能自定义方法名字
     // ...mapGetters(['cartLength'])
     //第二种写法 能自定定义拿过来的getters的方法的名字
     ...mapGetters({
-      cartLength: 'cartLength'
+      cartLength: "cartLength"
     })
+  },
+
+  activated(){
+    this.$refs.scroll.refresh()
   }
-}
+
+
+};
 </script>
 
 <style  scoped>
-.navbar{
-  background-color: var(--color-tint);
-  color: #fff;
+#shopcart {
+  position: relative;
+  height: 100vh;
 }
 
+.navbar {
+  background-color: var(--color-tint);
+  color: #fff;
+  z-index: 9;
+}
+
+.content {
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+  height: calc(100%-49px);
+  overflow: hidden;
+}
 </style>

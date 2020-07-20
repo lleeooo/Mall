@@ -14,7 +14,7 @@ export default {
   props: {
     topImages: {
       type: Array,
-      define() {
+      default() {
         return [];
       }
     }

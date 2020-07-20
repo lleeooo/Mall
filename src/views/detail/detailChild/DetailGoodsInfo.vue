@@ -18,7 +18,7 @@ export default {
   props: {
     detailInfo: {
       type: Object,
-      define() {
+      default() {
         return {};
       }
     }

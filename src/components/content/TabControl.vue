@@ -12,7 +12,7 @@ export default {
   props:{
     titles: {
       type: Array,
-      define(){
+      default(){
         return []
       }
     }

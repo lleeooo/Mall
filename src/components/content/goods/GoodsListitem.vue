@@ -15,7 +15,7 @@ export default {
   props: {
     goodsitem: {
       type: Object,
-      definde() {
+      default() {
         return {};
       }
     }

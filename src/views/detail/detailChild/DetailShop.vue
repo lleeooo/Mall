@@ -36,7 +36,7 @@ export default {
   props: {
     shop: {
       type: Object,
-      define() {
+      default() {
         return {};
       }
     }
