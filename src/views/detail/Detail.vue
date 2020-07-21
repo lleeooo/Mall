@@ -15,6 +15,7 @@
 
     <DetailBottomBar @joinShopcart="joinShopcart"/>
     <BackTotop @click.native="backClick" v-show="isShow"/>
+
   </div>
 </template> 
 
@@ -32,6 +33,8 @@ import GoodsList from "components/content/goods/GoodsList";
 import DetailBottomBar from "./detailChild/DetailBottomBar"
 import { debounce } from "@/common/utils.js";
 import {backTopMinxin} from "@/common/mixin.js"
+
+
 
 import {
   getDetail,
@@ -70,7 +73,9 @@ export default {
     DetailGoodsparams,
     DetailComment,
     GoodsList,
-    DetailBottomBar
+    DetailBottomBar,
+
+
   },
   methods: {
     goodsImagesLoad() {
@@ -120,7 +125,9 @@ export default {
 
 
       //2.将商品添加到购物车中
-      this.$store.dispatch('addCart' , product).then(res => {console.log(res)})
+      this.$store.dispatch('addCart' , product).then(res => {
+        this.$toast.show(res)
+      })
 
     }
   },

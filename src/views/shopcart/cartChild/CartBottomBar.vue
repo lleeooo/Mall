@@ -6,7 +6,7 @@
     </div>
     <div class="produce-price">
       <div>合计：￥{{totalPrice}}</div>
-      <span>结算</span>
+      <span @click="settlement">结算</span>
     </div>
   </div>
 </template>
@@ -45,7 +45,11 @@ export default {
         //如果不是true 表示有些没有选中 需要点击 全部选中
         this.$store.state.cartList.forEach(ele => ele.checked = true)
       }
-
+    },
+    settlement(){
+      if(this.$store.state.cartList.length === 0 || !this.$store.state.cartList.filter(ele => ele.checked).length){
+        this.$toast.show('请选择商品')
+      }
     }
     
   }

@@ -61,7 +61,7 @@ export default {
 }
 
 .content {
-  position: absolute;
+  position: fixed;
   top: 44px;
   bottom: 90px;
   left: 0;
@@ -70,8 +70,9 @@ export default {
   overflow: hidden;
 }
 .bottom-bar{
-  position: absolute;
+  position: fixed;
   bottom: 50px;
   width: 100%;
+  /* z-index: 9; */
 }
 </style>
