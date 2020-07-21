@@ -35,7 +35,7 @@ export default {
 
   background-color: rgba(0, 0, 0, 0.7);
   padding: 15px 25px;
-  font-size: 17px;
+  font-size: 16px;
   color: #fff;
 
   border-radius: 6px;
