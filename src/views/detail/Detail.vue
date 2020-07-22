@@ -121,7 +121,6 @@ export default {
       product.realPrice =this.goods.realPrice
       product.iid = this.iid
       product.count = 0
-      console.log(product)
 
 
       //2.将商品添加到购物车中

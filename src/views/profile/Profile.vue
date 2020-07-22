@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       infoList: [
-        { img: "https://i.loli.net/2020/07/22/N2nDiU9LIkc8Ctd.png", value: "我的消息" },
+        { img: "https://i.loli.net/2020/07/22/b6TJm41QtYVWSFq.png", value: "我的消息" },
         { img: "https://i.loli.net/2020/07/22/DA86OyepotqHNKJ.png", value: "积分商城" },
         { img: "https://i.loli.net/2020/07/22/8Lq5P6g4N93DMRo.png", value: "会员卡" },
         { img: "https://i.loli.net/2020/07/22/kExvlSVZYBWnhgj.png", value: "我的购物车" },
