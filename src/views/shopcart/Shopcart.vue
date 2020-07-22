@@ -71,7 +71,7 @@ export default {
 }
 .bottom-bar{
   position: fixed;
-  bottom: 50px;
+  bottom: 49px;
   width: 100%;
   /* z-index: 9; */
 }

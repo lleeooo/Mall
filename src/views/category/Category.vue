@@ -46,7 +46,6 @@ export default {
     //请求页面导航栏数据
     _categorys() {
       getCategory().then(res => {
-        console.log(res);
         //1.初始化数据
         this.categorys = res.data.category.list;
 
