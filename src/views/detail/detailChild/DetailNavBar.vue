@@ -3,7 +3,7 @@
     <nav-bar class="nav-bar">
       <div slot="left">
         <div class="back" @click="backClick">
-          <img src="~assets/img/common/back.svg" alt />
+          <img src="~assets/img/back/back.svg" alt />
         </div>
       </div>
       <div slot="center" class="title">
@@ -61,7 +61,13 @@ export default {
   color: var(--color-hight-text);
 }
 
+/* .back{
+  width: 100%;
+  height: 100%;
+} */
+
 .back img {
+  /* width: 100%; */
   position: absolute;
   top: 12px;
   left: 23px;
